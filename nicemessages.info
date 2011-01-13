@@ -1,0 +1,5 @@
+; $Id$
+name = Nice messages
+description = Displays drupal messages with jGrowl.
+core = 7.x
+files[] = nicemessages.module
