@@ -2,7 +2,6 @@
 /**
  * @file
  * Module install file.
- *
  * Attaching boolean nicemessages_enabled field to user objects.
  */
 
@@ -21,7 +20,6 @@ function nicemessages_install() {
       'default_value' => 1,
     ),
   );
-
   field_create_field($field);
 
   $instance = array(
@@ -31,16 +29,25 @@ function nicemessages_install() {
     'label' => t('Display messages in popups.'),
     'required' => false,
     'widget' => array(
-        'type' => 'options_select'
+    'type' => 'options_select'
     ),
   );
-
   field_create_instance($instance);
 }
 
 /**
  * Implements hook_uninstall().
+ * 
+ * CHANGED: previous uninstall hook from Febr. 2011 beta 
+ * didn't remove the profile field & vars - reinstallation failed "field exist".
+ * don't forget db_update() and clear all caches!
+ * (should work now, please post issues! - cheers, Digidog)
  */
 function nicemessages_uninstall() {
-  field_delete_field(NICEMESSAGES_FIELDNAME);
+  db_delete('variable')->condition('name', '%nicemessages%', 'LIKE')->execute();
+  field_delete_instance('field_user_nicemessages_enabled');
+  field_delete_field('field_user_nicemessages_enabled'); 
+  
+ // purge all field information
+  field_purge_batch(100);
 }

@@ -1,0 +1,11 @@
+
+=== DRUPAL 7.x-1.x ===
+
+7.x-1.x-dev
+
+#1254330 some small typo and more language support t() patched and patch now in module
+#1254972 info page @ drupal.org updated
+#1025842 jgrowl in libraries now for cooperation with other modules, path and info updated
+
+
+// PLease provide bug reports to the new dev shot. Thanks, digidog
