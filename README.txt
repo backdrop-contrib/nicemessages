@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.1 2011/01/13 13:09:16 blazey Exp $
+
 
 Description
 ============
@@ -14,7 +14,7 @@ Installation
 ============
 
 1) Copy nicemessages to your sites/all/modules or sites/$sitename/modules.
-2) Copy jgrowl jquery plugin to sites/all/libraries (link above)
+2) Download/copy jQuery jGrowl plugin (http://stanlemon.net/projects/jgrowl.html) to sites/all/libraries.
 3) Enable module at admin/modules.
 
 Settings
@@ -36,7 +36,7 @@ toggle nicemessages
 Dependencies
 ============
 
-none
+jQuery jGrowl plugin (http://stanlemon.net/projects/jgrowl.html)
 
 Support
 =======

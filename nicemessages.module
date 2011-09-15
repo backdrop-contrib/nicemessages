@@ -1,5 +1,4 @@
 <?php
-// $Id: nicemessages.module,v 1.1 2011/01/13 13:09:16 blazey Exp $
 /**
  * @file
  * Nicemessages module
@@ -8,13 +7,13 @@
  */
 
 define('NICEMESSAGES_FIELDNAME', 'field_user_nicemessages_enabled');
-define('JGROWL_PATH', 'sites/all/libraries/jgrowl');
+define('JGROWL_PATH', 'sites/all/libraries/jgrowl'); // --> changed to libraries folder now (@digidog)
 
 /**
  *  Implements hook_init().
  */
 function nicemessages_init() {
-  // Attach jGrowl files
+  // Attach jGrowl files // --> changed to libraries folder now (@digidog)
   drupal_add_css(JGROWL_PATH .'/jquery.jgrowl.css');
   drupal_add_js(JGROWL_PATH .'/jquery.jgrowl.js');
   // Atach module files
@@ -98,6 +97,11 @@ function nicemessages_are_enabled() {
 
 /**
  *  Save messages to js settings. 
+ * 
+ * @TODO moving 'position' setting from line 118 up to foreach line 108 here 
+ * and from form/global in line 147 down to foreach form/type in line 158
+ * for having individual position for each message type (@digidog)
+ * @TODO corresponding changes in js file needed (@digidog)
  */
 function nicemessages_set_messages() {
   $items = array(); 
@@ -106,7 +110,6 @@ function nicemessages_set_messages() {
       $item = array(
         'type' => $type,
         'content' => $message,
-        'position' => variable_get('nicemessages_' . $type . '_position', 'top-right'),
         'life' => variable_get('nicemessages_' . $type .'_life', '3') * 1000,
         'glue' => variable_get('nicemessages_' . $type .'_glue', 'after'),
         'speed' => variable_get('nicemessages_' . $type .'_speed', 'normal'),
@@ -115,7 +118,7 @@ function nicemessages_set_messages() {
     }
   }
   $settings = array(
-   // 'position' => variable_get('nicemessages_position', 'top-right'),
+    'position' => variable_get('nicemessages_position', 'top-right'),
     'items' => $items,
   );
   drupal_alter('nicemessages', $settings);
@@ -136,23 +139,14 @@ function nicemessages_settings_form() {
     '#type' => 'select',
     '#title' => t('Nicemessages default state'),
     '#required' => true,
-    '#default_value' => variable_get('nicemessages_default_state', 1), // changed some little typo here 
+    '#default_value' => variable_get('nicemessages_default_state', 1), // changes some typo here (@digidog)
     '#options' => array(
       1 => 'enabled',
       0 => 'disabled'
     ),
     '#description' => 'Users with "toggle nicemessages" permission will be able to override this setting for their account.',
   );
-
-  foreach (array('status', 'warning', 'error') as $type) {
-    $type_prefix = 'nicemessages_' . $type . '_';
-    $form[$type] = array(
-      '#type' => 'fieldset',
-      '#title' => t('@type messages', array('@type' => $type)),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
-    $form[$type][$type_prefix . 'nicemessages_position'] = array(
+  $form['global']['nicemessages_position'] = array(
     '#type' => 'select',
     '#title' => t('Where on the screen messages should be displayed?'),
     '#default_value' => variable_get('nicemessages_position', 'top-right'),
@@ -162,7 +156,15 @@ function nicemessages_settings_form() {
       'bottom-left' => t('bottom left corner'),
       'bottom-right' => t('bottom right corner'),
       'center' => t('center of the screen'),
-      ),
+    ),
+  );
+  foreach (array('status', 'warning', 'error') as $type) {
+    $type_prefix = 'nicemessages_' . $type . '_';
+    $form[$type] = array(
+      '#type' => 'fieldset',
+      '#title' => t('@type messages', array('@type' => $type)),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
     );
     $form[$type][$type_prefix . 'life'] = array(
       '#type' => 'textfield',
