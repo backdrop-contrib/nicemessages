@@ -17,7 +17,7 @@ function nicemessages_install() {
         1 => t('Yes'),
         0 => t('No'),
       ),
-      'default_value' => 1,
+      'default_value' => 0,
     ),
   );
   field_create_field($field);
@@ -37,11 +37,6 @@ function nicemessages_install() {
 
 /**
  * Implements hook_uninstall().
- * 
- * CHANGED - previous uninstall() from Febr. 2011 beta1 did not 
- * remove the profile field & variables - reinstallation failed "field exist".
- * 
- * (should work now, please post issues! - cheers, Digidog)
  */
 function nicemessages_uninstall() {
   db_delete('variable')->condition('name', '%nicemessages%', 'LIKE')->execute();

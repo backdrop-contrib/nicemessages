@@ -6,3 +6,4 @@ Nice messages 7.x-1.x-dev - Changes since 7.x-1.0-beta1
 #1254330 by Digidog: Fixed typo and more language support t()
 #1025842 by Digidog: jGrowl from now in libraries as intended by Drupal 7
 #1279686 by Digidog: Fixed uninstall() doesn't fetch all fields & vars.
+by Digidog: Default value of 'allowed values' in NICEMESSAGES_FIELDNAME = 0 now 

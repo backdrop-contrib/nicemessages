@@ -7,13 +7,13 @@
  */
 
 define('NICEMESSAGES_FIELDNAME', 'field_user_nicemessages_enabled');
-define('JGROWL_PATH', 'sites/all/libraries/jgrowl'); // --> changed to libraries folder now (@digidog)
+define('JGROWL_PATH', 'sites/all/libraries/jgrowl');
 
 /**
  *  Implements hook_init().
  */
 function nicemessages_init() {
-  // Attach jGrowl files // --> changed to libraries folder now (@digidog)
+  // Attach jGrowl files
   drupal_add_css(JGROWL_PATH .'/jquery.jgrowl.css');
   drupal_add_js(JGROWL_PATH .'/jquery.jgrowl.js');
   // Atach module files
@@ -100,8 +100,8 @@ function nicemessages_are_enabled() {
  * 
  * @TODO moving 'position' setting from line 118 up to foreach line 108 here 
  * and from form/global in line 147 down to foreach form/type in line 158
- * for having individual position for each message type (@digidog)
- * @TODO corresponding changes in js file needed (@digidog)
+ * for having individual position for each message type
+ * @TODO corresponding changes in js file needed
  */
 function nicemessages_set_messages() {
   $items = array(); 
@@ -139,7 +139,7 @@ function nicemessages_settings_form() {
     '#type' => 'select',
     '#title' => t('Nicemessages default state'),
     '#required' => true,
-    '#default_value' => variable_get('nicemessages_default_state', 1), // changes some typo here (@digidog)
+    '#default_value' => variable_get('nicemessages_default_state', 1),
     '#options' => array(
       1 => 'enabled',
       0 => 'disabled'
