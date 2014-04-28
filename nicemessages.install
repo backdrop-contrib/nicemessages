@@ -9,6 +9,8 @@
  * Implements hook_install();
  */
 function nicemessages_install() {
+  // Clear the field cache to be sure the new field type is available.
+  field_cache_clear();
   $field = array(
     'field_name' => NICEMESSAGES_FIELDNAME,
     'type' => 'list_boolean',
