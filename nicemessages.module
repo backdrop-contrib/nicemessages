@@ -150,11 +150,11 @@ function nicemessages_settings_form() {
       1 => 'enabled',
       0 => 'disabled'
     ),
-    '#description' => 'System wide On/Off. Note: Users with "toggle nicemessages" permission will be able to override this setting for their account.',
+    '#description' => t('System wide On/Off. Note: Users with "toggle nicemessages" permission will be able to override this setting for their account.'),
   );
   $form['global']['nicemessages_position'] = array(
     '#type' => 'select',
-    '#title' => t('Where on the screen messages should be displayed?'),
+    '#title' => t('Message screen positionscreen position'),
     '#default_value' => variable_get('nicemessages_position', 'top-right'),
     '#options' => array(
       'top-left' => t('top left corner'),
@@ -163,6 +163,7 @@ function nicemessages_settings_form() {
       'bottom-right' => t('bottom right corner'),
       'center' => t('center of the screen'),
     ),
+    '#description' => t('Where on the screen messages should be displayed?'),
   );
   $form['global']['nicemessages_background_color'] = array(
     '#type' => 'select',
