@@ -1,4 +1,4 @@
-
+Version: nicemessages-7.x-1.x-dev
 
 Description
 ============
@@ -8,15 +8,15 @@ the jQuery jGrowl plugin (http://stanlemon.net/projects/jgrowl.html).
 
 Module written by blazey (http://drupal.org/user/353861) for the monthly Meant4
 Drupal Contrib Contest (http://meant4.com). 
-Module co-maintained by digidog (http://drupal.org/user/1001934)
+Since 2011 module maintained by Digidog (http://drupal.org/user/1001934)
 
 Installation
 ============
 
-1) Copy nicemessages to your sites/all/modules or sites/$sitename/modules.
-2) Download/copy jQuery jGrowl plugin 
-   from here (http://stanlemon.net/projects/jgrowl.html) to sites/all/libraries.
-3) Enable module at admin/modules.
+1) Download nicemessages from project page and copy it to sites/all/modules or sites/$sitename/modules.
+2) Download jGrowl from http://stanlemon.net/projects/jgrowl.html, unpack and rename it to 'jgrowl' and move it into the directory sites/all/libraries/.
+3) Enable module at admin/modules and (de)activate it individually at each user profile.
+4) Detailed settings can be changed at admin/config (position, color, fading time, etc.)
 
 Settings
 ========
@@ -38,6 +38,7 @@ Dependencies
 ============
 
 jQuery jGrowl plugin (http://stanlemon.net/projects/jgrowl.html)
+Should be renamed to jgrowl and placed into sites/all/libraries
 
 Support
 =======

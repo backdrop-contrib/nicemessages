@@ -1,8 +1,9 @@
-
-
 Nice messages 7.x-1.x-dev - Changes since 7.x-1.0-beta1
 -------------------------------------------------------
 
+#2207225 by SweetTomato, Digidog: Error messages with long directory paths need css word-wrap.
+#2127109 by ocb, Digidog: Option for message colors depending on message type.
+#1918942 by semiaddict, Digidog: Allow the translation of the closerTemplate.
 #1254330 by Digidog: Fixed typo and more language support t()
 #1025842 by Digidog: jGrowl from now in libraries as intended by Drupal 7
 #1279686 by Digidog: Fixed uninstall() doesn't fetch all fields & vars.
