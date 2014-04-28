@@ -19,6 +19,9 @@ function nicemessages_init() {
   // Atach module files
   drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/nicemessages.css'); 
   drupal_add_js(drupal_get_path('module', 'nicemessages') . '/js/nicemessages.js');
+  if(variable_get('nicemessages_background_color')==1) { 
+    drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/nicemessages_background_color.css');
+  }
 }
 
 /**
@@ -157,6 +160,15 @@ function nicemessages_settings_form() {
       'bottom-right' => t('bottom right corner'),
       'center' => t('center of the screen'),
     ),
+  );
+  $form['global']['nicemessages_background_color'] = array(
+    '#type' => 'select',
+    '#title' => t('Drupal error and warning background colors or jGrowl background color for all message types?'),
+    '#default_value' => variable_get('nicemessages_background_color', 1),
+    '#options' => array(
+      1 => t('Drupal warning and error colors'),
+      0 => t('Unified color (default is black) for all message types'),
+      ),
   );
   foreach (array('status', 'warning', 'error') as $type) {
     $type_prefix = 'nicemessages_' . $type . '_';
