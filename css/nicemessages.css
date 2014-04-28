@@ -1,3 +1,8 @@
-#jGrowl .jGrowl-notification { background-position: 4px center; background-repeat: no-repeat; color: #fff; padding-left: 32px; }
+#jGrowl .jGrowl-notification{
+background-position: 4px center;
+background-repeat: no-repeat;
+color: #fff;
+padding-left: 14px;
+}
 #jGrowl .jGrowl-notification a { color: #fff; }
 #jGrowl .jGrowl-notification .jGrowl-message { word-wrap: break-word; }
