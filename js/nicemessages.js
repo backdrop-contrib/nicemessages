@@ -12,6 +12,7 @@ Drupal.behaviors.nicemessages = {
   attach: function () {
     if (Drupal.settings.nicemessages) {
       jQuery.jGrowl.defaults.position = Drupal.settings.nicemessages.position;
+      jQuery.jGrowl.defaults.closerTemplate = '<div>'+Drupal.t('[ close all ]')+'</div>';
       if (Drupal.settings.nicemessages.items) {
         for (i in Drupal.settings.nicemessages.items) {
           jQuery.jGrowl(Drupal.settings.nicemessages.items[i].content, {
