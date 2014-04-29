@@ -14,8 +14,8 @@ define('JGROWL_PATH', 'sites/all/libraries/jgrowl');
  */
 function nicemessages_init() {
   // Attach jGrowl files
-  drupal_add_css(JGROWL_PATH .'/jquery.jgrowl.css');
-  drupal_add_js(JGROWL_PATH .'/jquery.jgrowl.js');
+  drupal_add_css(JGROWL_PATH .'/jquery.jgrowl.min.css');
+  drupal_add_js(JGROWL_PATH .'/jquery.jgrowl.min.js');
   // Atach module files
   drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/nicemessages.css'); 
   drupal_add_js(drupal_get_path('module', 'nicemessages') . '/js/nicemessages.js');
