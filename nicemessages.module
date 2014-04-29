@@ -79,11 +79,38 @@ function nicemessages_field_access($op, $field, $entity_type, $entity, $account)
  */ 
 function nicemessages_preprocess_page(&$vars) {
   if (nicemessages_are_enabled ()) {
+    if(nicemessages_pages_visibility() == FALSE) return;
     // Do not display messages in standard way,
     $vars['show_messages'] = false;
     // display them with jGrowl
     nicemessages_set_messages();
   }
+}
+
+/**
+ * Show nicemessages on specific pages
+ */
+function nicemessages_pages_visibility(){
+    $pages = variable_get('nicemessages_pages');
+    $visibility = variable_get('nicemessages_visibility');
+    if (!empty($pages)) {
+      // Convert path to lowercase. This allows comparison of the same path
+      // with different case. Ex: /Page, /page, /PAGE.
+      $pages = drupal_strtolower($pages);
+      // Convert the Drupal path to lowercase
+      $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+      // Compare the lowercase internal and lowercase path alias (if any).
+      $page_match = drupal_match_path($path, $pages);
+      // When $visibility has a value of 0
+      // the block is displayed on all pages except those listed in $pages.
+      // When set to 1, 
+      // it is displayed only on those pages listed in $pages.
+      $page_match = !($visibility xor $page_match);
+      if ($page_match) {
+        return TRUE;
+      }
+    }
+    return FALSE;
 }
 
 /**
@@ -175,6 +202,26 @@ function nicemessages_settings_form() {
       2 => t('Drupal default with borders/shadows'),
       ),
     '#description' => t('In the moment Nicemessages support 3 styles. jGrowl default (all black), Drupal default (3 status colors), and Drupal default with borders and shadows.'),
+  );
+  $form['global']['nicemessages_visibility'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Pages'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+  );
+  $form['global']['nicemessages_visibility']['nicemessages_visibility'] = array(
+      '#type' => 'radios',
+      '#title' => t('Show nicemessages on specific pages'),
+      '#default_value' => variable_get('nicemessages_visibility', 'all'),
+      '#options' => array(
+        0 => t('All pages except those listed'),
+        1 => t('Only the listed pages'),
+      ),
+  );
+  $form['global']['nicemessages_visibility']['nicemessages_pages'] = array(
+      '#type' => 'textarea',
+      '#default_value' => variable_get('nicemessages_pages', 'admin/'),
+      '#description' => t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
   );
   foreach (array('status', 'warning', 'error') as $type) {
     $type_prefix = 'nicemessages_' . $type . '_';
