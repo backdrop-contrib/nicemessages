@@ -1,8 +1,0 @@
-#jGrowl .jGrowl-notification.status {background-color: green; border: 1px solid darkgreen;}
-#jGrowl .jGrowl-notification.warning {background-color: orange; border: 1px solid darkorange;}
-#jGrowl .jGrowl-notification.error {background-color: red; border: 1px solid darkred;}
-#jGrowl .jGrowl-notification{
--moz-box-shadow: 0 0 20px rgba(0,0,0,0.6);
--webkit-box-shadow: 0 0 20px rgba(0,0,0,0.6);
-box-shadow: 0 0 20px rgba(0,0,0,0.6);
-}
