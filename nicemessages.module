@@ -86,33 +86,42 @@ function nicemessages_preprocess_page(&$vars) {
  * Show nicemessages on specific pages
  */
 function nicemessages_pages_visibility(){
-    $pages = variable_get('nicemessages_pages');
-    $visibility = variable_get('nicemessages_visibility');
-    if (!empty($pages)) {
-      // Convert path to lowercase. This allows comparison of the same path
-      // with different case. Ex: /Page, /page, /PAGE.
-      $pages = drupal_strtolower($pages);
-      // Convert the Drupal path to lowercase
-      $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
-      // Compare the lowercase internal and lowercase path alias (if any).
-      $page_match = drupal_match_path($path, $pages);
-      // When $visibility has a value of 0
-      // the block is displayed on all pages except those listed in $pages.
-      // When set to 1, 
-      // it is displayed only on those pages listed in $pages.
-      $page_match = !($visibility xor $page_match);
+  $pages = variable_get('nicemessages_paths');
+  $visibility = variable_get('nicemessages_pages');
+  if (!empty($pages)) {
+    // Convert path to lowercase. This allows comparison of the same path
+    // with different case. Ex: /Page, /page, /PAGE.
+    $pages = drupal_strtolower($pages);
+    // Convert the Drupal path to lowercase
+    $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+    // Compare the lowercase internal and lowercase path alias (if any).
+    $page_match = drupal_match_path($path, $pages);
+    // When $visibility has a value of 0
+    // preprocess toggles to display nicemessgaes on all pages except those listed in $pages.
+    // When set to 1, 
+    // it is displayed only on those pages listed in $pages.
+    $page_match = !($visibility xor $page_match);
       if ($page_match) {
-        return TRUE;
+         return TRUE;
+      } else {
+         return FALSE;
       }
-    }
-    return FALSE;
+    // else if ($pages is empty) and $visibility is not NULL (Only listes pages)
+    // toggles not to display Nicemessgaes on any pages at all.
+   } else if ($visibility) {
+      return FALSE;
+    // else if ($pages is empty) and $visibility is NULL (All pages except listed)
+    // toggles to display Nicemessages on all pages.
+   } else {
+      return TRUE;
+  }
 }
 
 /**
  * Check if nicemessages are enabled for current user.
  */
 function nicemessages_are_enabled() {
-    if (variable_get('nicemessages_default_state') === 'on') {
+  if (variable_get('nicemessages_default_state') === 'on') {
         return TRUE;
     } elseif (variable_get('nicemessages_default_state') === 'off') {
         return FALSE;
@@ -124,7 +133,7 @@ function nicemessages_are_enabled() {
     return empty($account->{NICEMESSAGES_FIELDNAME}[LANGUAGE_NONE][0]['value']) ? FALSE : TRUE;
     } else {
         return TRUE;
-    }
+  }
 }
 
 /**
@@ -244,18 +253,18 @@ function nicemessages_settings_form() {
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
-  $form['global']['nicemessages_visibility']['nicemessages_visibility'] = array(
+  $form['global']['nicemessages_visibility']['nicemessages_pages'] = array(
     '#type' => 'radios',
     '#title' => t('Show nicemessages on specific pages'),
-    '#default_value' => variable_get('nicemessages_visibility', 'all'),
+    '#default_value' => variable_get('nicemessages_pages', 0),
     '#options' => array(
       0 => t('All pages except those listed'),
       1 => t('Only the listed pages'),
     ),
   );
-  $form['global']['nicemessages_visibility']['nicemessages_pages'] = array(
+  $form['global']['nicemessages_visibility']['nicemessages_paths'] = array(
     '#type' => 'textarea',
-    '#default_value' => variable_get('nicemessages_pages', 'admin/*'),
+    '#default_value' => variable_get('nicemessages_paths', 'admin/*'),
     '#description' => t(""
       . "Specify pages by using their paths. Enter one path per line. "
       . "The '*' character is a wildcard. Example paths are "
