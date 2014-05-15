@@ -15,3 +15,9 @@
     border: 0 none;
     background-image: none;
 }
+.jGrowl.center {
+    top: 0;
+    left: 50%;
+    width: auto;
+    margin: 0 0 0 -130px;
+}

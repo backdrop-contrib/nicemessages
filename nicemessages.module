@@ -16,7 +16,8 @@ function nicemessages_init() {
   // Attach jGrowl files
   drupal_add_css(JGROWL_PATH .'/jquery.jgrowl.min.css');
   drupal_add_js(JGROWL_PATH .'/jquery.jgrowl.min.js');
-  // Atach module files
+  // Attach module files
+  drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/nicemessages_positions.css');
   drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/' . variable_get('nicemessages_style'));
   if(variable_get('nicemessages_shadows') === 1){drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/shadows.css');}
   drupal_add_js(drupal_get_path('module', 'nicemessages') . '/js/nicemessages.js');
@@ -137,12 +138,7 @@ function nicemessages_are_enabled() {
 }
 
 /**
- *  Save messages to js settings. 
- * 
- * @TODO moving 'position' setting from line 118 up to foreach line 108 here 
- * and from form/global in line 147 down to foreach form/type in line 158
- * for having individual position for each message type
- * @TODO corresponding changes in js file needed
+ *  Save messages to js settings.
  */
 function nicemessages_set_messages() {
   $items = array(); 
@@ -200,10 +196,10 @@ function nicemessages_settings_form() {
     '#default_value' => variable_get('nicemessages_position', 'top-right'),
     '#options' => array(
       'top-left' => t('top left'),
+      'center' => t('top center'),
       'top-right' => t('top right'),
       'bottom-left' => t('bottom left'),
       'bottom-right' => t('bottom right'),
-      'center' => t('center'),
     ),
     '#description' => t(''
       . 'Choose where the popup messages should be displayed in the browser port view.<br /> '

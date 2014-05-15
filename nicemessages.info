@@ -1,5 +1,15 @@
 name = Nice messages
-description = Displays drupal system messages with animating jGrowl popups.
+description = Displays drupal system messages with lightweight animating little jGrowl popups.
 core = 7.x
+version = 7.x-2.0
+
 dependencies[] = list
+dependencies[] = field
+dependencies[] = options
+dependencies[] = libraries
+
+package = Administration
+
+configure = admin/config/system/nicemessages
+
 files[] = nicemessages.module
