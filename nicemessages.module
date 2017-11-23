@@ -14,12 +14,14 @@ define('JGROWL_PATH', 'sites/all/libraries/jgrowl');
  */
 function nicemessages_init() {
   // Attach jGrowl files
-  drupal_add_css(JGROWL_PATH .'/jquery.jgrowl.min.css');
-  drupal_add_js(JGROWL_PATH .'/jquery.jgrowl.min.js');
+  drupal_add_css(JGROWL_PATH . '/jquery.jgrowl.min.css');
+  drupal_add_js(JGROWL_PATH . '/jquery.jgrowl.min.js');
   // Attach module files
   drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/nicemessages_positions.css');
   drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/' . variable_get('nicemessages_style'));
-  if(variable_get('nicemessages_shadows') === 1){drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/shadows.css');}
+  if (variable_get('nicemessages_shadows') === 1) {
+    drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/shadows.css');
+  }
   drupal_add_js(drupal_get_path('module', 'nicemessages') . '/js/nicemessages.js');
 }
 
@@ -63,21 +65,23 @@ function nicemessages_field_access($op, $field, $entity_type, $entity, $account)
     if ($op == 'edit') {
       return user_access('toggle nicemessages', $account);
     }
-    else if ($op == 'view') {
+    elseif ($op == 'view') {
       return user_access('administer users');
     }
   }
   return TRUE;
 }
- 
+
 /**
  *  Implements hook_preprocess_page().
- */ 
+ */
 function nicemessages_preprocess_page(&$vars) {
   if (nicemessages_are_enabled()) {
-    if(nicemessages_pages_visibility() == FALSE) {return;}
+    if (nicemessages_pages_visibility() == FALSE) {
+      return;
+    }
     // Do not display messages in standard way,
-    $vars['show_messages'] = false;
+    $vars['show_messages'] = FALSE;
     // display them with jGrowl
     nicemessages_set_messages();
   }
@@ -86,7 +90,7 @@ function nicemessages_preprocess_page(&$vars) {
 /**
  * Show nicemessages on specific pages
  */
-function nicemessages_pages_visibility(){
+function nicemessages_pages_visibility() {
   $pages = variable_get('nicemessages_paths');
   $visibility = variable_get('nicemessages_pages');
   if (!empty($pages)) {
@@ -99,22 +103,25 @@ function nicemessages_pages_visibility(){
     $page_match = drupal_match_path($path, $pages);
     // When $visibility has a value of 0
     // preprocess toggles to display nicemessgaes on all pages except those listed in $pages.
-    // When set to 1, 
+    // When set to 1,
     // it is displayed only on those pages listed in $pages.
     $page_match = !($visibility xor $page_match);
       if ($page_match) {
-         return TRUE;
-      } else {
-         return FALSE;
+        return TRUE;
+      }
+      else {
+        return FALSE;
       }
     // else if ($pages is empty) and $visibility is not NULL (Only listes pages)
     // toggles not to display Nicemessgaes on any pages at all.
-   } else if ($visibility) {
-      return FALSE;
-    // else if ($pages is empty) and $visibility is NULL (All pages except listed)
-    // toggles to display Nicemessages on all pages.
-   } else {
-      return TRUE;
+   }
+   else if ($visibility) {
+     return FALSE;
+     // else if ($pages is empty) and $visibility is NULL (All pages except listed)
+     // toggles to display Nicemessages on all pages.
+   }
+   else {
+     return TRUE;
   }
 }
 
@@ -123,17 +130,20 @@ function nicemessages_pages_visibility(){
  */
 function nicemessages_are_enabled() {
   if (variable_get('nicemessages_default_state') === 'on') {
-        return TRUE;
-    } elseif (variable_get('nicemessages_default_state') === 'off') {
-        return FALSE;
-    } elseif (variable_get('nicemessages_default_state') === 'user' && user_access('toggle nicemessages')) {
+    return TRUE;
+  }
+  elseif (variable_get('nicemessages_default_state') === 'off') {
+    return FALSE;
+  }
+  elseif (variable_get('nicemessages_default_state') === 'user' && user_access('toggle nicemessages')) {
     global $user;
     // Load the full user entity with fields attached.
     $accounts = entity_load('user', array($user->uid));
     $account = array_shift($accounts);
     return empty($account->{NICEMESSAGES_FIELDNAME}[LANGUAGE_NONE][0]['value']) ? FALSE : TRUE;
-    } else {
-        return TRUE;
+  }
+  else {
+    return TRUE;
   }
 }
 
@@ -141,15 +151,15 @@ function nicemessages_are_enabled() {
  *  Save messages to js settings.
  */
 function nicemessages_set_messages() {
-  $items = array(); 
+  $items = array();
   foreach (drupal_get_messages() as $type => $messages) {
     foreach ($messages as $key => $message) {
       $item = array(
         'type' => $type,
         'content' => $message,
-        'life' => variable_get('nicemessages_' . $type .'_life', '6') * 1000,
-        'glue' => variable_get('nicemessages_' . $type .'_glue', 'after'),
-        'speed' => variable_get('nicemessages_' . $type .'_speed', 'slow'),
+        'life' => variable_get('nicemessages_' . $type . '_life', '6') * 1000,
+        'glue' => variable_get('nicemessages_' . $type . '_glue', 'after'),
+        'speed' => variable_get('nicemessages_' . $type . '_speed', 'slow'),
       );
       $items[] = $item;
     }
@@ -234,7 +244,7 @@ function nicemessages_settings_form() {
   $form['global']['nicemessages_shadows'] = array(
     '#type' => 'checkbox',
     '#title' => t('Nice messages box shadows'),
-    '#default_value' => variable_get('nicemessages_shadows',1),
+    '#default_value' => variable_get('nicemessages_shadows', 1),
     '#options' => array(
       0 => FALSE,
       1 => TRUE,
@@ -264,7 +274,7 @@ function nicemessages_settings_form() {
     '#description' => t(""
       . "Specify pages by using their paths. Enter one path per line. "
       . "The '*' character is a wildcard. Example paths are "
-      . "%blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", 
+      . "%blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.",
       array(
         '%blog' => 'blog',
         '%blog-wildcard' => 'blog/*',
