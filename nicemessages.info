@@ -1,9 +1,7 @@
 name = Nice messages
-description = Displays drupal system messages with lightweight animating little jGrowl popups.
+description = Displays Backdrop system messages with lightweight animating little jGrowl popups.
 backdrop = 1.x
 type = module
-
 package = Administration
-
 configure = admin/config/system/nicemessages
 
