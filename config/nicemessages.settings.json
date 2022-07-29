@@ -1,0 +1,21 @@
+{
+    "_config_name": "nicemessages.settings",
+    "nicemessages_style": "nicemessages_backdrop.css",
+    "nicemessages_shadows": "1",
+    "nicemessages_paths": "admin/*",
+    "nicemessages_pages": "0",
+    "nicemessages_default_state": "on",
+    "nicemessages_status_life": "6",
+    "nicemessages_status_glue": "appended",
+    "nicemessages_status_speed": "slow",
+    "nicemessages_info_life": "6",
+    "nicemessages_info_glue": "appended",
+    "nicemessages_info_speed": "slow",
+    "nicemessages_warning_life": "6",
+    "nicemessages_warning_glue": "appended",
+    "nicemessages_warning_speed": "slow",
+    "nicemessages_error_life": "6",
+    "nicemessages_error_glue": "appended",
+    "nicemessages_error_speed": "slow",
+    "nicemessages_position": "top-right"
+}

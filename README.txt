@@ -1,46 +1,43 @@
-Version: nicemessages-7.x-1.x-dev
+# Nice messages
 
-Description
-============
-
-Nicemessages module provides displaying drupal messages in nice popups using
+Nice messages module provides displaying Backdrop messages in nice popups using
 the jQuery jGrowl plugin (https://github.com/stanlemon/jGrowl).
 
-Module written by blazey (http://drupal.org/user/353861) for the monthly Meant4
-Drupal Contrib Contest (http://meant4.com). 
-Since 2011 module maintained by Digidog (http://drupal.org/user/1001934)
+## Installation
 
-Installation
-============
+- Install this module using the official Backdrop CMS instructions at
+  https://backdropcms.org/guide/modules.
 
-1) Download nicemessages from project page and copy it to sites/all/modules or sites/$sitename/modules.
-2) Download jGrowl from https://github.com/stanlemon/jGrowl, unpack and rename it to 'jgrowl' and move it into the directory sites/all/libraries/.
-3) Enable module at admin/modules and (de)activate it individually at each user profile.
-4) Detailed settings can be changed at admin/config (position, color, fading time, etc.)
+- Visit the configuration page under Administration > Configuration > System >
+  Nice messages (admin/config/system/nicemessages) and configure the global
+  (default state, position) and message-type-specyfic settings as you need.
 
-Settings
-========
+## Permissions
 
-The settings form is at admin/config/system/nicemessages. It is divided into
-global (default state, position) and message-type-specyfic settings.
-
-Permissions
-===========
-
-administer nicemessages
+- administer nicemessages
   Gives access to configuration form.
 
-toggle nicemessages
+- toggle nicemessages
   Users with this permission can turn on or off displaying nicemessages for
   them at their account edit page (user/$uid/edit).
 
-Dependencies
-============
+## Issues
 
-jQuery jGrowl plugin (https://github.com/stanlemon/jGrowl)
-Should be renamed to jgrowl and placed into sites/all/libraries
+Bugs and Feature requests should be reported in the Issue Queue:
+https://github.com/backdrop-contrib/nicemessages/issues.
 
-Support
-=======
+## Current Maintainers
 
-http://drupal.org/project/issues/nicemessages
+- [Alan Mels](https://github.com/alanmels).
+- Seeking additional maintainers.
+
+## Credits
+
+- Ported to Backdrop CMS by [Alan Mels](https://github.com/alanmels).
+- Originally written for Drupal by [User Name](https://github.com/username).
+- Sponsored by [AltaGrade](https://www.altagrade.com)
+
+## License
+
+This project is GPL v2 software.
+See the LICENSE.txt file in this directory for complete text.

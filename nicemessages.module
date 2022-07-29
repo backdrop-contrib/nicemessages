@@ -3,37 +3,49 @@
  * @file
  * Nicemessages module
  *
- * Displays drupal messages with jGrowl jQuery plugin.
+ * Displays backdrop messages with jGrowl jQuery plugin.
  */
 
 define('NICEMESSAGES_FIELDNAME', 'field_user_nicemessages_enabled');
-define('JGROWL_PATH', 'sites/all/libraries/jgrowl');
+define('JGROWL_PATH', backdrop_get_path('module', 'nicemessages') . '/lib/jgrowl');
 
 /**
- *  Implements hook_init().
+ * Implements hook_config_info().
  */
-function nicemessages_init() {
-  // Attach jGrowl files
-  drupal_add_css(JGROWL_PATH . '/jquery.jgrowl.min.css');
-  drupal_add_js(JGROWL_PATH . '/jquery.jgrowl.min.js');
-  // Attach module files
-  drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/nicemessages_positions.css');
-  drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/' . variable_get('nicemessages_style'));
-  if (variable_get('nicemessages_shadows') === 1) {
-    drupal_add_css(drupal_get_path('module', 'nicemessages') . '/css/shadows.css');
-  }
-  drupal_add_js(drupal_get_path('module', 'nicemessages') . '/js/nicemessages.js');
+function nicemessages_config_info() {
+  $prefixes['nicemessages.settings'] = array(
+    'label' => t('Nice messages settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
 }
 
 /**
- *  Implements hook_menu().
+ * Implements hook_init().
+ */
+function nicemessages_init() {
+  $config = config('nicemessages.settings');
+  // Attach jGrowl files
+  backdrop_add_css(JGROWL_PATH . '/jquery.jgrowl.min.css');
+  backdrop_add_js(JGROWL_PATH . '/jquery.jgrowl.min.js');
+  // Attach module files
+  backdrop_add_css(backdrop_get_path('module', 'nicemessages') . '/css/nicemessages_positions.css');
+  backdrop_add_css(backdrop_get_path('module', 'nicemessages') . '/css/' . $config->get('nicemessages_style'));
+  if ($config->get('nicemessages_shadows') === 1) {
+    backdrop_add_css(backdrop_get_path('module', 'nicemessages') . '/css/shadows.css');
+  }
+  backdrop_add_js(backdrop_get_path('module', 'nicemessages') . '/js/nicemessages.js');
+}
+
+/**
+ * Implements hook_menu().
  */
 function nicemessages_menu() {
   // Module configuration form
   $items['admin/config/system/nicemessages'] = array(
     'title' => 'Nice messages',
     'description' => 'Nice messages configuration',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('nicemessages_settings_form'),
     'access arguments' => array('administer nicemessages'),
   );
@@ -73,55 +85,55 @@ function nicemessages_field_access($op, $field, $entity_type, $entity, $account)
 }
 
 /**
- *  Implements hook_preprocess_page().
+ * Implements hook_preprocess_page().
  */
 function nicemessages_preprocess_page(&$vars) {
   if (nicemessages_are_enabled()) {
     if (nicemessages_pages_visibility() == FALSE) {
       return;
     }
-    // Do not display messages in standard way,
-    $vars['show_messages'] = FALSE;
-    // display them with jGrowl
+    // Display messages with jGrowl
     nicemessages_set_messages();
   }
 }
+
 
 /**
  * Show nicemessages on specific pages
  */
 function nicemessages_pages_visibility() {
-  $pages = variable_get('nicemessages_paths');
-  $visibility = variable_get('nicemessages_pages');
+  $config = config('nicemessages.settings');
+  $pages = $config->get('nicemessages_paths');
+  $visibility = $config->get('nicemessages_pages');
   if (!empty($pages)) {
     // Convert path to lowercase. This allows comparison of the same path
     // with different case. Ex: /Page, /page, /PAGE.
-    $pages = drupal_strtolower($pages);
-    // Convert the Drupal path to lowercase
-    $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+    $pages = backdrop_strtolower($pages);
+    // Convert the Backdrop path to lowercase
+    $path = backdrop_strtolower(backdrop_get_path_alias($_GET['q']));
     // Compare the lowercase internal and lowercase path alias (if any).
-    $page_match = drupal_match_path($path, $pages);
+    $page_match = backdrop_match_path($path, $pages);
     // When $visibility has a value of 0
     // preprocess toggles to display nicemessgaes on all pages except those listed in $pages.
     // When set to 1,
     // it is displayed only on those pages listed in $pages.
     $page_match = !($visibility xor $page_match);
-      if ($page_match) {
-        return TRUE;
-      }
-      else {
-        return FALSE;
-      }
+    if ($page_match) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
     // else if ($pages is empty) and $visibility is not NULL (Only listes pages)
     // toggles not to display Nicemessgaes on any pages at all.
-   }
-   else if ($visibility) {
-     return FALSE;
-     // else if ($pages is empty) and $visibility is NULL (All pages except listed)
-     // toggles to display Nicemessages on all pages.
-   }
-   else {
-     return TRUE;
+  }
+  else if ($visibility) {
+    return FALSE;
+    // else if ($pages is empty) and $visibility is NULL (All pages except listed)
+    // toggles to display Nicemessages on all pages.
+  }
+  else {
+    return TRUE;
   }
 }
 
@@ -129,13 +141,14 @@ function nicemessages_pages_visibility() {
  * Check if nicemessages are enabled for current user.
  */
 function nicemessages_are_enabled() {
-  if (variable_get('nicemessages_default_state') === 'on') {
+  $config = config('nicemessages.settings');
+  if ($config->get('nicemessages_default_state') === 'on') {
     return TRUE;
   }
-  elseif (variable_get('nicemessages_default_state') === 'off') {
+  elseif ($config->get('nicemessages_default_state') === 'off') {
     return FALSE;
   }
-  elseif (variable_get('nicemessages_default_state') === 'user' && user_access('toggle nicemessages')) {
+  elseif ($config->get('nicemessages_default_state') === 'user' && user_access('toggle nicemessages')) {
     global $user;
     // Load the full user entity with fields attached.
     $accounts = entity_load('user', array($user->uid));
@@ -151,31 +164,42 @@ function nicemessages_are_enabled() {
  *  Save messages to js settings.
  */
 function nicemessages_set_messages() {
+  $config = config('nicemessages.settings');
   $items = array();
-  foreach (drupal_get_messages() as $type => $messages) {
+  foreach (backdrop_get_messages() as $type => $messages) {
     foreach ($messages as $key => $message) {
       $item = array(
         'type' => $type,
         'content' => $message,
-        'life' => variable_get('nicemessages_' . $type . '_life', '6') * 1000,
-        'glue' => variable_get('nicemessages_' . $type . '_glue', 'after'),
-        'speed' => variable_get('nicemessages_' . $type . '_speed', 'slow'),
+        'life' => $config->get('nicemessages_' . $type . '_life') * 1000,
+        'glue' => $config->get('nicemessages_' . $type . '_glue'),
+        'speed' => $config->get('nicemessages_' . $type . '_speed'),
       );
       $items[] = $item;
     }
   }
   $settings = array(
-    'position' => variable_get('nicemessages_position', 'bottom-left'),
+    'position' => $config->get('nicemessages_position'),
     'items' => $items,
   );
-  drupal_alter('nicemessages', $settings);
-  drupal_add_js(array('nicemessages' => $settings), 'setting');
+  backdrop_alter('nicemessages', $settings);
+  backdrop_add_js(array('nicemessages' => $settings), 'setting');
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function nicemessages_theme_registry_alter(&$theme_registry) {
+  // Do not display messages in traditional way.
+  unset($theme_registry['status_messages']);
 }
 
 /**
  *  Module settings form.
  */
 function nicemessages_settings_form() {
+  $config = config('nicemessages.settings');
+  $form['#config'] = 'nicemessages.settings';
   $form['global'] = array(
     '#type' => 'fieldset',
     '#title' => t('Global settings'),
@@ -185,12 +209,12 @@ function nicemessages_settings_form() {
   $form['global']['nicemessages_default_state'] = array(
     '#type' => 'radios',
     '#title' => t('Activation method'),
-    '#default_value' => variable_get('nicemessages_default_state', 'on'),
+    '#default_value' => $config->get('nicemessages_default_state'),
     '#options' => array(
-       'on' => t('On'),
-       'off' => t('Off'),
-       'user' => t('User'),
-     ),
+      'on' => t('On'),
+      'off' => t('Off'),
+      'user' => t('User'),
+    ),
     '#description' => t(''
        . 'The settings <strong>On</strong> (1) and <strong>Off</strong> (2) '
        . 'are both global settings affecting all users including Anonoumus user, '
@@ -203,7 +227,7 @@ function nicemessages_settings_form() {
   $form['global']['nicemessages_position'] = array(
     '#type' => 'select',
     '#title' => t('Message popup screen position'),
-    '#default_value' => variable_get('nicemessages_position', 'top-right'),
+    '#default_value' => $config->get('nicemessages_position'),
     '#options' => array(
       'top-left' => t('top left'),
       'center' => t('top center'),
@@ -219,10 +243,10 @@ function nicemessages_settings_form() {
   $form['global']['nicemessages_style'] = array(
     '#type' => 'select',
     '#title' => t('Nice messages styles (colors)'),
-    '#default_value' => variable_get('nicemessages_style', 'nicemessages_jgrowl.css'),
+    '#default_value' => $config->get('nicemessages_style'),
     '#options' => array(
       'nicemessages_jgrowl.css' => t('jGrowl'),
-      'nicemessages_drupal.css' => t('Drupal'),
+      'nicemessages_backdrop.css' => t('Backdrop'),
       'nicemessages_facebook.css' => t('Facebook'),
     ),
     '#description' => t(''
@@ -231,8 +255,8 @@ function nicemessages_settings_form() {
       . '<li><em><strong>jGrowl</strong> - '
       . 'default jGrowl popup style based on the popup script. (black, no icons) '
       . 'for all message types.</em></li>'
-      . '<li><em><strong>Drupal</strong> - '
-      . 'Drupals default 3 system message type icons & colors.</em></li>'
+      . '<li><em><strong>Backdrop</strong> - '
+      . 'Backdrops default 3 system message type icons & colors.</em></li>'
       . '<li><em><strong>Facebook</strong> - '
       . 'imitating the light-grey-blue rounded popup style of Facebook statuses '
       . 'for all message types. Errors get red borders.</em></li>'
@@ -244,11 +268,11 @@ function nicemessages_settings_form() {
   $form['global']['nicemessages_shadows'] = array(
     '#type' => 'checkbox',
     '#title' => t('Nice messages box shadows'),
-    '#default_value' => variable_get('nicemessages_shadows', 1),
+    '#default_value' => $config->get('nicemessages_shadows'),
     '#options' => array(
       0 => FALSE,
       1 => TRUE,
-      ),
+    ),
     '#description' => t(''
       . 'Accentuation of the popup boxes by emphasing with light surrounding shadows.'
     ),
@@ -262,7 +286,7 @@ function nicemessages_settings_form() {
   $form['global']['nicemessages_visibility']['nicemessages_pages'] = array(
     '#type' => 'radios',
     '#title' => t('Show nicemessages on specific pages'),
-    '#default_value' => variable_get('nicemessages_pages', 0),
+    '#default_value' => $config->get('nicemessages_pages'),
     '#options' => array(
       0 => t('All pages except those listed'),
       1 => t('Only the listed pages'),
@@ -270,30 +294,30 @@ function nicemessages_settings_form() {
   );
   $form['global']['nicemessages_visibility']['nicemessages_paths'] = array(
     '#type' => 'textarea',
-    '#default_value' => variable_get('nicemessages_paths', 'admin/*'),
+    '#default_value' => $config->get('nicemessages_paths'),
     '#description' => t(""
       . "Specify pages by using their paths. Enter one path per line. "
       . "The '*' character is a wildcard. Example paths are "
       . "%blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.",
       array(
-        '%blog' => 'blog',
-        '%blog-wildcard' => 'blog/*',
-        '%front' => '<front>'
-      )
+      '%blog' => 'blog',
+      '%blog-wildcard' => 'blog/*',
+      '%front' => '<front>',
+    )
     ),
   );
-  foreach (array('status', 'warning', 'error') as $type) {
+  foreach (array('status', 'info', 'warning', 'error') as $type) {
     $type_prefix = 'nicemessages_' . $type . '_';
     $form[$type] = array(
       '#type' => 'fieldset',
-      '#title' => t('@type messages', array('@type' => $type)),
+      '#title' => ucfirst(t('@type messages', array('@type' => $type))),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
     $form[$type][$type_prefix . 'life'] = array(
       '#type' => 'textfield',
       '#title' => t('How long should the message be visible?'),
-      '#default_value' => variable_get($type_prefix . 'life', '6'),
+      '#default_value' => $config->get($type_prefix . 'life'),
       '#size' => 10,
       '#maxlength' => 10,
       '#required' => FALSE,
@@ -303,7 +327,7 @@ function nicemessages_settings_form() {
     $form[$type][$type_prefix . 'glue'] = array(
       '#type' => 'select',
       '#title' => t('Should new messages be prepended or appended to the list?'),
-      '#default_value' => variable_get($type_prefix . 'glue', 'after'),
+      '#default_value' => $config->get($type_prefix . 'glue'),
       '#options' => array(
         'before' => 'prepended',
         'after' => 'appended',
@@ -312,7 +336,7 @@ function nicemessages_settings_form() {
     $form[$type][$type_prefix . 'speed'] = array(
       '#type' => 'select',
       '#title' => t('Animation speed'),
-      '#default_value' => variable_get($type_prefix . 'speed', 'slow'),
+      '#default_value' => $config->get($type_prefix . 'speed'),
       '#options' => array(
         'slow' => 'slow',
         'normal' => 'normal',
