@@ -1,7 +1,12 @@
 # Nice messages
 
-Nice messages module provides displaying Backdrop messages in nice popups using
-the jQuery jGrowl plugin (https://github.com/stanlemon/jGrowl).
+The Nice messages popup module changes how Backdrop status, warning and error messages are showing up by giving flexible
+stylable nice looking fading little jQuery-popups like on Social networks at hand, provided by the small and fast jQuery
+jGrowl plugin. It can be activated globally or partially for certain pages / users and prevents the typical cluttering
+caused by error messages getting in the way by moving the grid and layout of a website up and down.
+
+The jQuery jGrowl plugin beats all its competitors because it supports all browsers including older Browsers like IE6
+and loads with a very small size of less than 6kb.
 
 ## Installation
 
@@ -34,7 +39,7 @@ https://github.com/backdrop-contrib/nicemessages/issues.
 ## Credits
 
 - Ported to Backdrop CMS by [Alan Mels](https://github.com/alanmels).
-- Originally written for Drupal by [User Name](https://github.com/username).
+- Originally written for Drupal by [Blazej Owczarczyk (blazey)](https://www.drupal.org/u/blazey).
 - Sponsored by [AltaGrade](https://www.altagrade.com)
 
 ## License
