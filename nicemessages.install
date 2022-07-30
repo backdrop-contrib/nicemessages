@@ -41,8 +41,6 @@ function nicemessages_install() {
  * Implements hook_uninstall().
  */
 function nicemessages_uninstall() {
-  db_delete('variable')->condition('name', '%nicemessages%', 'LIKE')->execute();
-  field_delete_instance('field_user_nicemessages_enabled');
   field_delete_field('field_user_nicemessages_enabled');
 
   // purge all field information

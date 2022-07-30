@@ -85,18 +85,21 @@ function nicemessages_field_access($op, $field, $entity_type, $entity, $account)
 }
 
 /**
- * Implements hook_preprocess_page().
+ * Implements hook_theme_registry_alter().
  */
-function nicemessages_preprocess_page(&$vars) {
+function nicemessages_theme_registry_alter(&$theme_registry) {
+
   if (nicemessages_are_enabled()) {
     if (nicemessages_pages_visibility() == FALSE) {
       return;
     }
+    // Do not display messages in traditional way.
+    unset($theme_registry['status_messages']);
     // Display messages with jGrowl
     nicemessages_set_messages();
   }
-}
 
+}
 
 /**
  * Show nicemessages on specific pages
@@ -184,14 +187,6 @@ function nicemessages_set_messages() {
   );
   backdrop_alter('nicemessages', $settings);
   backdrop_add_js(array('nicemessages' => $settings), 'setting');
-}
-
-/**
- * Implements hook_theme_registry_alter().
- */
-function nicemessages_theme_registry_alter(&$theme_registry) {
-  // Do not display messages in traditional way.
-  unset($theme_registry['status_messages']);
 }
 
 /**
@@ -344,6 +339,5 @@ function nicemessages_settings_form() {
       ),
     );
   }
-
   return system_settings_form($form);
 }
