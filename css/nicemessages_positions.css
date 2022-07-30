@@ -1,21 +1,20 @@
-.jGrowl.top-left {
+#jGrowl.top-left {
     top: 40px;
     left: 0;
 }
-.jGrowl.center {
-    top: 40px;
+#jGrowl.center {
+    top: 50%;
     left: 50%;
-    margin: 0 0 0 -140px;
 }
-.jGrowl.top-right {
+#jGrowl.top-right {
     top: 40px;
     right: 0;
 }
-.jGrowl.bottom-left {
+#jGrowl.bottom-left {
     bottom: 40px;
     left: 0;
 }
-.jGrowl.bottom-right {
+#jGrowl.bottom-right {
     bottom: 40px;
     right: 0;
 }

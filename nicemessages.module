@@ -224,11 +224,11 @@ function nicemessages_settings_form() {
     '#title' => t('Message popup screen position'),
     '#default_value' => $config->get('nicemessages_position'),
     '#options' => array(
-      'top-left' => t('top left'),
-      'center' => t('top center'),
-      'top-right' => t('top right'),
-      'bottom-left' => t('bottom left'),
-      'bottom-right' => t('bottom right'),
+      'top-left' => t('Top Left'),
+      'center' => t('Center'),
+      'top-right' => t('Top Right'),
+      'bottom-left' => t('Bottom Left'),
+      'bottom-right' => t('Bottom Right'),
     ),
     '#description' => t(''
       . 'Choose where the popup messages should be displayed in the browser port view.<br /> '
