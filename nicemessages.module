@@ -93,8 +93,6 @@ function nicemessages_theme_registry_alter(&$theme_registry) {
     if (nicemessages_pages_visibility() == FALSE) {
       return;
     }
-    // Do not display messages in traditional way.
-    unset($theme_registry['status_messages']);
     // Display messages with jGrowl
     nicemessages_set_messages();
   }
