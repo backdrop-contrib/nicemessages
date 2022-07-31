@@ -1,4 +1,0 @@
-Nice messages 1.x-1.x, 2022 July 29
-------------------------------------
-
-- The first working version after porting the module from Drupal 7 has been pushed.
