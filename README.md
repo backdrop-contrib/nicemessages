@@ -8,6 +8,8 @@ caused by error messages getting in the way by moving the grid and layout of a w
 The jQuery jGrowl plugin beats all its competitors because it supports all browsers including older Browsers like IE6
 and loads with a very small size of less than 6kb.
 
+![Nice Messages](https://raw.githubusercontent.com/backdrop-contrib/nicemessages/1.x.1.x/screenshot.png)
+
 ## Installation
 
 - Install this module using the official Backdrop CMS instructions at
