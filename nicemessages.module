@@ -84,8 +84,17 @@ function nicemessages_field_access($op, $field, $entity_type, $entity, $account)
   return TRUE;
 }
 
+/**
+ * Implements hook_theme_registry_alter().
+ * @param $theme_registry
+ */
 function nicemessages_theme_registry_alter(&$theme_registry) {
-  $theme_registry['status_messages']['function'] = 'nicemessages_set_messages';
+  if (nicemessages_are_enabled()) {
+    if (nicemessages_pages_visibility() == FALSE) {
+      return;
+    }
+    $theme_registry['status_messages']['function'] = 'nicemessages_set_messages';
+  }
 }
 
 /**
@@ -156,6 +165,12 @@ function nicemessages_are_enabled() {
 function nicemessages_set_messages() {
   $config = config('nicemessages.settings');
   $items = array();
+
+  backdrop_set_message('status', 'status');
+  backdrop_set_message('info', 'info');
+  backdrop_set_message('warning', 'warning');
+  backdrop_set_message('error', 'error');
+
   foreach (backdrop_get_messages() as $type => $messages) {
     foreach ($messages as $key => $message) {
       $item = array(
