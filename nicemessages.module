@@ -166,11 +166,6 @@ function nicemessages_set_messages() {
   $config = config('nicemessages.settings');
   $items = array();
 
-  backdrop_set_message('status', 'status');
-  backdrop_set_message('info', 'info');
-  backdrop_set_message('warning', 'warning');
-  backdrop_set_message('error', 'error');
-
   foreach (backdrop_get_messages() as $type => $messages) {
     foreach ($messages as $key => $message) {
       $item = array(
