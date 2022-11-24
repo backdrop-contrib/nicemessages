@@ -2,17 +2,25 @@
     top: 40px;
     left: 0;
 }
-#jGrowl.center {
-    top: 50%;
-    left: 50%;
+#jGrowl.top-center {
+    top: 30px;
+    left: 40%;
 }
 #jGrowl.top-right {
     top: 40px;
     right: 0;
 }
+#jGrowl.middle {
+  top: 50%;
+  left: 40%;
+}
 #jGrowl.bottom-left {
     bottom: 40px;
     left: 0;
+}
+#jGrowl.bottom-center {
+  bottom: 40px;
+  left: 40%;
 }
 #jGrowl.bottom-right {
     bottom: 40px;

@@ -222,9 +222,11 @@ function nicemessages_settings_form() {
     '#default_value' => $config->get('nicemessages_position'),
     '#options' => array(
       'top-left' => t('Top Left'),
-      'center' => t('Center'),
+      'top-center' => t('Top Center'),
       'top-right' => t('Top Right'),
+      'middle' => t('Middle'),
       'bottom-left' => t('Bottom Left'),
+      'bottom-center' => t('Bottom Center'),
       'bottom-right' => t('Bottom Right'),
     ),
     '#description' => t(''
