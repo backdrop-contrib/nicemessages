@@ -6,45 +6,51 @@
  */
 
 /**
- * Implements hook_install();().
+ * Implements hook_install().
  */
 function nicemessages_install() {
-  // Clear the field cache to be sure the new field type is available.
-  field_cache_clear();
-  $field = array(
-    'field_name' => NICEMESSAGES_FIELDNAME,
-    'type' => 'list_boolean',
-    'settings' => array(
-      'allowed_values' => array(
-        1 => t('Yes'),
-        0 => t('No'),
+  if (db_table_exists('field_data_field_user_nicemessages_enabled')) {
+    backdrop_set_message(t('A database table <em>field_data_field_user_nicemessages_enabled</em> already exists. If not migrating from Drupal 7, you might consider re-installing the module.'));
+  }
+  else {
+    // Clear the field cache to be sure the new field type is available.
+    field_cache_clear();
+    $field = array(
+      'field_name' => NICEMESSAGES_FIELDNAME,
+      'type' => 'list_boolean',
+      'settings' => array(
+        'allowed_values' => array(
+          1 => t('Yes'),
+          0 => t('No'),
+        ),
+        'default_value' => 0,
       ),
-      'default_value' => 0,
-    ),
-  );
-  field_create_field($field);
+    );
+    field_create_field($field);
 
-  $instance = array(
-    'field_name' => NICEMESSAGES_FIELDNAME,
-    'entity_type' => 'user',
-    'bundle' => 'user',
-    'label' => t('Display messages in popups.'),
-    'required' => FALSE,
-    'widget' => array(
-      'type' => 'options_select',
-    ),
-  );
-  field_create_instance($instance);
+    $instance = array(
+      'field_name' => NICEMESSAGES_FIELDNAME,
+      'entity_type' => 'user',
+      'bundle' => 'user',
+      'label' => t('Display messages in popups.'),
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+    );
+    field_create_instance($instance);
+  }
 }
 
 /**
  * Implements hook_uninstall().
  */
 function nicemessages_uninstall() {
-  field_delete_field('field_user_nicemessages_enabled');
-
-  // purge all field information
-  field_purge_batch(100);
+  db_drop_table('field_data_field_user_nicemessages_enabled');
+  db_drop_table('field_revision_field_user_nicemessages_enabled');
+  config('field.field.field_user_nicemessages_enabled')->delete();
+  config('field.instance.user.user.field_user_nicemessages_enabled')->delete();
+  config('nicemessages.settings')->delete();
 }
 
 /**
