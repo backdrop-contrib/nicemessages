@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Nicemessages module
+ * Nicemessages module.
  *
  * Displays backdrop messages with jGrowl jQuery plugin.
  */
@@ -25,10 +26,10 @@ function nicemessages_config_info() {
  */
 function nicemessages_init() {
   $config = config('nicemessages.settings');
-  // Attach jGrowl files
+  // Attach jGrowl files.
   backdrop_add_css(JGROWL_PATH . '/jquery.jgrowl.min.css');
   backdrop_add_js(JGROWL_PATH . '/jquery.jgrowl.min.js');
-  // Attach module files
+  // Attach module files.
   backdrop_add_css(backdrop_get_path('module', 'nicemessages') . '/css/nicemessages_positions.css');
   backdrop_add_css(backdrop_get_path('module', 'nicemessages') . '/css/' . $config->get('nicemessages_style'));
   if ($config->get('nicemessages_shadows') === 1) {
@@ -41,7 +42,7 @@ function nicemessages_init() {
  * Implements hook_menu().
  */
 function nicemessages_menu() {
-  // Module configuration form
+  // Module configuration form.
   $items['admin/config/system/nicemessages'] = array(
     'title' => 'Nice messages',
     'description' => 'Nice messages configuration',
@@ -86,19 +87,20 @@ function nicemessages_field_access($op, $field, $entity_type, $entity, $account)
 
 /**
  * Implements hook_theme_registry_alter().
+ *
  * @param $theme_registry
  */
 function nicemessages_theme_registry_alter(&$theme_registry) {
-  if (nicemessages_are_enabled()) {
-    if (nicemessages_pages_visibility() == FALSE) {
-      return;
-    }
-    $theme_registry['status_messages']['function'] = 'nicemessages_set_messages';
+  if (!nicemessages_are_enabled() || nicemessages_pages_visibility() == FALSE) {
+    return;
   }
+  // Replace the status_messages theme function with one that *returns* markup
+  // (for core AJAX expectations) AND injects JS settings for jGrowl popups.
+  $theme_registry['status_messages']['function'] = 'nicemessages_status_messages';
 }
 
 /**
- * Show nicemessages on specific pages
+ * Show nicemessages on specific pages.
  */
 function nicemessages_pages_visibility() {
   $config = config('nicemessages.settings');
@@ -108,7 +110,7 @@ function nicemessages_pages_visibility() {
     // Convert path to lowercase. This allows comparison of the same path
     // with different case. Ex: /Page, /page, /PAGE.
     $pages = backdrop_strtolower($pages);
-    // Convert the Backdrop path to lowercase
+    // Convert the Backdrop path to lowercase.
     $path = backdrop_strtolower(backdrop_get_path_alias($_GET['q']));
     // Compare the lowercase internal and lowercase path alias (if any).
     $page_match = backdrop_match_path($path, $pages);
@@ -123,12 +125,12 @@ function nicemessages_pages_visibility() {
     else {
       return FALSE;
     }
-    // else if ($pages is empty) and $visibility is not NULL (Only lists pages)
+    // Else if ($pages is empty) and $visibility is not NULL (Only lists pages)
     // toggles not to display Nicemessgaes on any pages at all.
   }
-  else if ($visibility) {
+  elseif ($visibility) {
     return FALSE;
-    // else if ($pages is empty) and $visibility is NULL (All pages except listed)
+    // Else if ($pages is empty) and $visibility is NULL (All pages except listed)
     // toggles to display Nicemessages on all pages.
   }
   else {
@@ -160,22 +162,24 @@ function nicemessages_are_enabled() {
 }
 
 /**
- *  Save messages to js settings.
+ * Save messages to js settings.
  */
-function nicemessages_set_messages() {
+function nicemessages_status_messages($variables = array()) {
   $config = config('nicemessages.settings');
-  $items = array();
+  $display = $variables['display'] ?? NULL;
+  $message_types = (empty($variables['messages'])) ? backdrop_get_messages($display) : $variables['messages'];
 
-  foreach (backdrop_get_messages() as $type => $messages) {
-    foreach ($messages as $key => $message) {
-      $item = array(
+  // Build JS settings for nicemessages.js.
+  $items = array();
+  foreach ($message_types as $type => $messages) {
+    foreach ($messages as $message) {
+      $items[] = array(
         'type' => $type,
         'content' => $message,
         'life' => $config->get('nicemessages_' . $type . '_life') * 1000,
         'glue' => $config->get('nicemessages_' . $type . '_glue'),
         'speed' => $config->get('nicemessages_' . $type . '_speed'),
       );
-      $items[] = $item;
     }
   }
   $settings = array(
@@ -184,10 +188,41 @@ function nicemessages_set_messages() {
   );
   backdrop_alter('nicemessages', $settings);
   backdrop_add_js(array('nicemessages' => $settings), 'setting');
+
+  // Return markup identical to core theme_status_messages() so AJAX inserts succeed.
+  $output = '';
+  $status_heading = array(
+    'status' => t('Status message'),
+    'error' => t('Error message'),
+    'warning' => t('Warning message'),
+    'info' => t('Info message'),
+  );
+  foreach ($message_types as $type => $messages) {
+    $output .= "<div class=\"messages $type\">\n";
+    if (!empty($status_heading[$type])) {
+      $output .= '  <h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
+    }
+    if (count($messages) > 1) {
+      $output .= "  <ul>\n";
+      foreach ($messages as $m) {
+        $output .= '    <li>' . $m . "</li>\n";
+      }
+      $output .= "  </ul>\n";
+    }
+    else {
+      $output .= reset($messages) . "\n";
+    }
+    if (config_get('system.core', 'messages_dismissible')) {
+      backdrop_add_library('system', 'backdrop.dismiss');
+      $output .= '<a href="#" class="dismiss" title="' . t('Dismiss') . '"><span class="element-invisible">' . t('Dismiss') . '</span></a>' . "\n";
+    }
+    $output .= "</div>\n";
+  }
+  return $output;
 }
 
 /**
- *  Module settings form.
+ * Module settings form.
  */
 function nicemessages_settings_form() {
   $config = config('nicemessages.settings');
@@ -294,10 +329,10 @@ function nicemessages_settings_form() {
       . "The '*' character is a wildcard. Example paths are "
       . "%blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.",
       array(
-      '%blog' => 'blog',
-      '%blog-wildcard' => 'blog/*',
-      '%front' => '<front>',
-    )
+        '%blog' => 'blog',
+        '%blog-wildcard' => 'blog/*',
+        '%front' => '<front>',
+      )
     ),
   );
   foreach (array('status', 'info', 'warning', 'error') as $type) {
