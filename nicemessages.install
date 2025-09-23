@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Module install file.
@@ -51,31 +52,5 @@ function nicemessages_uninstall() {
   config('field.field.field_user_nicemessages_enabled')->delete();
   config('field.instance.user.user.field_user_nicemessages_enabled')->delete();
   config('nicemessages.settings')->delete();
-}
-
-/**
- * Migrate nicemessages variables to config.
- */
-function nicemessages_update_1000() {
-  $config = config('nicemessages.settings');
-  $config->set('nicemessages_style', update_variable_get('nicemessages_style', 'nicemessages_jgrowl.css'));
-  $config->set('nicemessages_shadows', update_variable_get('nicemessages_shadows', '1'));
-  $config->set('nicemessages_paths', update_variable_get('nicemessages_paths', 'admin/*'));
-  $config->set('nicemessages_pages', update_variable_get('nicemessages_pages', '0'));
-  $config->set('nicemessages_default_state', update_variable_get('nicemessages_default_state', 'on'));
-  $config->set('nicemessages_type_life', update_variable_get('nicemessages_type_life', 'dynamic variable in file /nicemessages/nicemessages.module line 160'));
-  $config->set('nicemessages_type_glue', update_variable_get('nicemessages_type_glue', 'dynamic variable in file /nicemessages/nicemessages.module line 161'));
-  $config->set('nicemessages_type_speed', update_variable_get('nicemessages_type_speed', 'dynamic variable in file /nicemessages/nicemessages.module line 162'));
-  $config->set('nicemessages_position', update_variable_get('nicemessages_position', 'top-right'));
-  $config->save();
-
-  update_variable_del('nicemessages_style');
-  update_variable_del('nicemessages_shadows');
-  update_variable_del('nicemessages_paths');
-  update_variable_del('nicemessages_pages');
-  update_variable_del('nicemessages_default_state');
-  update_variable_del('nicemessages_type_life');
-  update_variable_del('nicemessages_type_glue');
-  update_variable_del('nicemessages_type_speed');
-  update_variable_del('nicemessages_position');
+  backdrop_flush_all_caches();
 }
