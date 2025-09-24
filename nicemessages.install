@@ -3,7 +3,7 @@
 /**
  * @file
  * Module install file.
- * Attaching boolean nicemessages_enabled field to user objects.
+ * Attaches boolean nicemessages_enabled field to user objects.
  */
 
 /**

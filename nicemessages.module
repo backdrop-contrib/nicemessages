@@ -25,6 +25,10 @@ function nicemessages_config_info() {
  * Implements hook_init().
  */
 function nicemessages_init() {
+  // Avoid attaching assets on AJAX responses; the base page includes them.
+  if (function_exists('backdrop_is_ajax') && backdrop_is_ajax()) {
+    return;
+  }
   $config = config('nicemessages.settings');
   // Attach jGrowl files.
   backdrop_add_css(JGROWL_PATH . '/jquery.jgrowl.min.css');
@@ -32,7 +36,7 @@ function nicemessages_init() {
   // Attach module files.
   backdrop_add_css(backdrop_get_path('module', 'nicemessages') . '/css/nicemessages_positions.css');
   backdrop_add_css(backdrop_get_path('module', 'nicemessages') . '/css/' . $config->get('nicemessages_style'));
-  if ($config->get('nicemessages_shadows') === 1) {
+  if ((int) $config->get('nicemessages_shadows') === 1) {
     backdrop_add_css(backdrop_get_path('module', 'nicemessages') . '/css/shadows.css');
   }
   backdrop_add_js(backdrop_get_path('module', 'nicemessages') . '/js/nicemessages.js');
